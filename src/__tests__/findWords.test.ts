@@ -1,47 +1,47 @@
-import { doesSignatureCover, findWords, makeSignature } from '@src/findWords';
+import { doesSpectrumCover, findWords, makeSpectrum } from '@src/findWords';
 import { describe, expect, test } from 'vitest';
 
 describe('string dict', () => {
     test('doesSignatureCover: empty inputs', () => {
-        expect(() => doesSignatureCover(null, null)).toThrow(
+        expect(() => doesSpectrumCover(null, null)).toThrow(
             'Invalid first input: null',
         );
-        expect(doesSignatureCover({}, {})).toBe(false);
-        expect(() => doesSignatureCover(null, {})).toThrow(
+        expect(doesSpectrumCover({}, {})).toBe(false);
+        expect(() => doesSpectrumCover(null, {})).toThrow(
             'Invalid first input: null',
         );
-        expect(() => doesSignatureCover({}, null)).toThrow(
+        expect(() => doesSpectrumCover({}, null)).toThrow(
             'Invalid second input: null',
         );
     });
 
     test('makeSignature: removing space', () => {
-        expect(makeSignature('')).toEqual(null);
-        expect(makeSignature('   ')).toEqual(null);
-        expect(makeSignature('\t\t\t')).toEqual(null);
-        expect(makeSignature('\n\n\n')).toEqual(null);
-        expect(makeSignature(' \n\t\r \n \r \t')).toEqual(null);
+        expect(makeSpectrum('')).toEqual(null);
+        expect(makeSpectrum('   ')).toEqual(null);
+        expect(makeSpectrum('\t\t\t')).toEqual(null);
+        expect(makeSpectrum('\n\n\n')).toEqual(null);
+        expect(makeSpectrum(' \n\t\r \n \r \t')).toEqual(null);
     });
 
     test('makeSignature: make dict from string', () => {
-        expect(makeSignature('aaaa')).toEqual({ a: 4 });
-        expect(makeSignature('ate')).toEqual({ a: 1, t: 1, e: 1 });
-        expect(makeSignature('eat')).toEqual({ a: 1, t: 1, e: 1 });
-        expect(makeSignature('good')).toEqual({ g: 1, o: 2, d: 1 });
-        expect(makeSignature(' a t\te\n')).toEqual({ a: 1, t: 1, e: 1 });
-        expect(makeSignature(' g \t\r\no o\rd ')).toEqual({ g: 1, o: 2, d: 1 });
-        expect(makeSignature('good')).toEqual(makeSignature('odog'));
+        expect(makeSpectrum('aaaa')).toEqual({ a: 4 });
+        expect(makeSpectrum('ate')).toEqual({ a: 1, t: 1, e: 1 });
+        expect(makeSpectrum('eat')).toEqual({ a: 1, t: 1, e: 1 });
+        expect(makeSpectrum('good')).toEqual({ g: 1, o: 2, d: 1 });
+        expect(makeSpectrum(' a t\te\n')).toEqual({ a: 1, t: 1, e: 1 });
+        expect(makeSpectrum(' g \t\r\no o\rd ')).toEqual({ g: 1, o: 2, d: 1 });
+        expect(makeSpectrum('good')).toEqual(makeSpectrum('odog'));
     });
 
     test('isSignatureCover: make dict from string with spaces', () => {
-        const ate = makeSignature('ate');
-        const eta = makeSignature('eta');
-        const gate = makeSignature('gate');
+        const ate = makeSpectrum('ate');
+        const eta = makeSpectrum('eta');
+        const gate = makeSpectrum('gate');
 
-        expect(doesSignatureCover(ate, ate)).toBe(true);
-        expect(doesSignatureCover(ate, eta)).toBe(true);
-        expect(doesSignatureCover(gate, ate)).toBe(true);
-        expect(doesSignatureCover(ate, gate)).toBe(false);
+        expect(doesSpectrumCover(ate, ate)).toBe(true);
+        expect(doesSpectrumCover(ate, eta)).toBe(true);
+        expect(doesSpectrumCover(gate, ate)).toBe(true);
+        expect(doesSpectrumCover(ate, gate)).toBe(false);
     });
 
     test('findWords: handle empty inputs', () => {

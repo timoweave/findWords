@@ -1,10 +1,10 @@
-export interface DictionarySignature {
+export interface Signature {
     text: string;
-    signature: Record<string, number> | null;
+    spectrum: Record<string, number> | null;
 }
 
-export function makeSignature(input: string): Record<string, number> | null {
-    const signature = input
+export function makeSpectrum(input: string): Record<string, number> | null {
+    const spectrum = input
         .replace(/[ \t\n\r]*/g, '') // strip spaces
         .split('') // split into characters
         .reduce<Record<string, number>>((acc, word) => {
@@ -14,11 +14,11 @@ export function makeSignature(input: string): Record<string, number> | null {
             acc[word]++; // count the number of times the character appears
             return acc;
         }, {});
-    const hasNoKey = Object.keys(signature).length === 0;
-    return hasNoKey ? null : signature;
+    const hasNoKey = Object.keys(spectrum).length === 0;
+    return hasNoKey ? null : spectrum;
 }
 
-export function doesSignatureCover(
+export function doesSpectrumCover(
     big: Record<string, number> | null,
     small: Record<string, number> | null,
 ): boolean {
@@ -45,22 +45,22 @@ export function doesSignatureCover(
 }
 
 export function findWords(inputString: string, dictionary: string[]): string[] {
-    const inputSignature = makeSignature(inputString);
-    if (inputSignature == null) {
+    const inputSpectrum = makeSpectrum(inputString);
+    if (inputSpectrum == null) {
         return dictionary;
     }
 
-    const coveredStrings = dictionary
-        .map<DictionarySignature>((dictionaryEntry) => ({
+    const inputSpectrumCoveredStrings = dictionary
+        .map<Signature>((dictionaryEntry) => ({
             text: dictionaryEntry,
-            signature: makeSignature(dictionaryEntry),
+            spectrum: makeSpectrum(dictionaryEntry),
         }))
         .filter(
-            (item) =>
-                item.signature != null &&
-                doesSignatureCover(inputSignature, item.signature),
+            (dictionarySignature) =>
+                dictionarySignature.spectrum != null &&
+                doesSpectrumCover(inputSpectrum, dictionarySignature.spectrum),
         )
-        .map<string>((item) => item.text);
+        .map<string>((dictionarySignature) => dictionarySignature.text);
 
-    return coveredStrings;
+    return inputSpectrumCoveredStrings;
 }
