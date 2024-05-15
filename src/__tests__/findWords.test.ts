@@ -211,6 +211,16 @@ describe('string dict', () => {
         expect(
             findWords('åäö', ['åäö', 'åte', 'äat', 'öa', 'dog', 'do', 'god']),
         ).toEqual(['åäö']);
+		 expect(
+             findWords('élève', ['élève', 'école', 'étudiant', 'université']),
+         ).toEqual(['élève']);
+         expect(findWords('こんこん', ['こんにちは', 'こん'])).toEqual([
+             'こん',
+         ]);
+         expect(findWords('こんにこんにちは', ['ちは', 'こんに'])).toEqual([
+             'ちは',
+             'こんに',
+         ]);
     });
 
     test('findWords: emoji examples', () => {
