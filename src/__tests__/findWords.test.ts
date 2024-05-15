@@ -17,10 +17,15 @@ describe('string dict', () => {
 
     test('makeSignature: removing space', () => {
         expect(makeSpectrum('')).toEqual(null);
-        expect(makeSpectrum('   ')).toEqual(null);
-        expect(makeSpectrum('\t\t\t')).toEqual(null);
-        expect(makeSpectrum('\n\n\n')).toEqual(null);
-        expect(makeSpectrum(' \n\t\r \n \r \t')).toEqual(null);
+        expect(makeSpectrum('   ')).toEqual({ ' ': 3 });
+        expect(makeSpectrum('\t\t\t')).toEqual({ '\t': 3 });
+        expect(makeSpectrum('\n\n\n')).toEqual({ '\n': 3 });
+        expect(makeSpectrum(' \n\t\r \n \r \t')).toEqual({
+            ' ': 4,
+            '\n': 2,
+            '\t': 2,
+            '\r': 2,
+        });
     });
 
     test('makeSignature: make dict from string', () => {
@@ -28,8 +33,23 @@ describe('string dict', () => {
         expect(makeSpectrum('ate')).toEqual({ a: 1, t: 1, e: 1 });
         expect(makeSpectrum('eat')).toEqual({ a: 1, t: 1, e: 1 });
         expect(makeSpectrum('good')).toEqual({ g: 1, o: 2, d: 1 });
-        expect(makeSpectrum(' a t\te\n')).toEqual({ a: 1, t: 1, e: 1 });
-        expect(makeSpectrum(' g \t\r\no o\rd ')).toEqual({ g: 1, o: 2, d: 1 });
+        expect(makeSpectrum(' a t\te\n')).toEqual({
+            a: 1,
+            t: 1,
+            e: 1,
+            ' ': 2,
+            '\t': 1,
+            '\n': 1,
+        });
+        expect(makeSpectrum(' g \t\r\no o\rd ')).toEqual({
+            g: 1,
+            o: 2,
+            d: 1,
+            ' ': 4,
+            '\r': 2,
+            '\t': 1,
+            '\n': 1,
+        });
         expect(makeSpectrum('good')).toEqual(makeSpectrum('odog'));
     });
 
@@ -48,20 +68,11 @@ describe('string dict', () => {
         expect(findWords('', [])).toEqual([]);
         expect(findWords('   ', [])).toEqual([]);
         expect(findWords('hello', [])).toEqual([]);
-        expect(findWords('   ', ['apple', 'banana'])).toEqual([
-            'apple',
-            'banana',
-        ]);
-        expect(findWords(' \t\r\n', [' ', '  ', '   \r\t\n'])).toEqual([
-            ' ',
-            '  ',
-            '   \r\t\n',
-        ]);
-        expect(findWords(' \t\r\n', ['a', 'b  ', '   \r\t\n'])).toEqual([
-            'a',
-            'b  ',
-            '   \r\t\n',
-        ]);
+        expect(findWords('   ', ['apple', 'banana'])).toEqual([]);
+        expect(
+            findWords(' \t\r\n', [' ', '  ', '   \r\t\n', '\r\t\n']),
+        ).toEqual([' ', '\r\t\n']);
+        expect(findWords(' \t\r\n', ['a', 'b  ', '   \r\t\n'])).toEqual([]);
         expect(findWords('', ['a', 'b'])).toEqual(['a', 'b']);
     });
 
@@ -165,7 +176,7 @@ describe('string dict', () => {
     test('findWords: log examples with spaces', () => {
         expect(
             findWords('at\ne', ['\rate', 'e\tat', 'te\na', 'g ood']),
-        ).toEqual(['\rate', 'e\tat', 'te\na']);
+        ).toEqual(['te\na']);
 
         expect(
             findWords('at e', [

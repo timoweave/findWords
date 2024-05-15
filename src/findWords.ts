@@ -5,7 +5,6 @@ export interface Signature {
 
 export function makeSpectrum(input: string): Record<string, number> | null {
     const spectrum = input
-        .replace(/[ \t\n\r]*/g, '') // strip spaces
         .split('') // split into characters
         .reduce<Record<string, number>>((acc, word) => {
             if (acc[word] == null) {
